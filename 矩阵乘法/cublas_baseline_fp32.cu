@@ -14,28 +14,28 @@
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 
-#define CHECK_CUDA(expr)                                                  \
-    do                                                                    \
-    {                                                                     \
-        cudaError_t _st = (expr);                                         \
-        if (_st != cudaSuccess)                                           \
-        {                                                                 \
-            fprintf(stderr, "%s:%d CUDA %s\n", __FILE__, __LINE__,        \
-                    cudaGetErrorString(_st));                             \
-            exit(1);                                                      \
-        }                                                                 \
+#define CHECK_CUDA(expr)                                           \
+    do                                                             \
+    {                                                              \
+        cudaError_t _st = (expr);                                  \
+        if (_st != cudaSuccess)                                    \
+        {                                                          \
+            fprintf(stderr, "%s:%d CUDA %s\n", __FILE__, __LINE__, \
+                    cudaGetErrorString(_st));                      \
+            exit(1);                                               \
+        }                                                          \
     } while (0)
 
-#define CHECK_CUBLAS(expr)                                                \
-    do                                                                    \
-    {                                                                     \
-        cublasStatus_t _st = (expr);                                      \
-        if (_st != CUBLAS_STATUS_SUCCESS)                                 \
-        {                                                                 \
-            fprintf(stderr, "%s:%d cuBLAS error %d\n", __FILE__, __LINE__,\
-                    (int)_st);                                            \
-            exit(1);                                                      \
-        }                                                                 \
+#define CHECK_CUBLAS(expr)                                                 \
+    do                                                                     \
+    {                                                                      \
+        cublasStatus_t _st = (expr);                                       \
+        if (_st != CUBLAS_STATUS_SUCCESS)                                  \
+        {                                                                  \
+            fprintf(stderr, "%s:%d cuBLAS error %d\n", __FILE__, __LINE__, \
+                    (int)_st);                                             \
+            exit(1);                                                       \
+        }                                                                  \
     } while (0)
 
 constexpr int WARMUP = 10;
@@ -100,6 +100,7 @@ void run_size(int M, int K, int N)
 
     cublasHandle_t handle;
     CHECK_CUBLAS(cublasCreate(&handle));
+    // CHECK_CUBLAS(cublasSetMathMode(handle, CUBLAS_PEDANTIC_MATH));
 
     float ms = bench(handle, dA, dB, dC, M, K, N);
     double flops = 2.0 * M * N * K;
